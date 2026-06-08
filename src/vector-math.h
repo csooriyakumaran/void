@@ -39,8 +39,8 @@ typedef struct m4
     f32 data[16];
 } m4;
 
-#define M3(m, r, c) ((m).data[(r)*3 + (c)])
-#define M4(m, r, c) ((m).data[(r)*4 + (c)])
+#define M3(m, r, c) ((m).data[(c)*3 + (r)])
+#define M4(m, r, c) ((m).data[(c)*4 + (r)])
 
 f32 deg_to_rad(f32 d);
 

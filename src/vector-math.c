@@ -70,14 +70,75 @@ m3 m3_identity(void)
     };
 }
 
-m3  m3_mul(m3 a, m3 b);
-m3  m3_rotation_x(f32 angle);
-m3  m3_rotation_y(f32 angle);
-m3  m3_rotation_z(f32 angle);
+m3  m3_mul(m3 a, m3 b)
+{
+    m3 R;
+    for (int r = 0; r < 3; ++r)
+    {
+        for (int c = 0; c < 3; ++c)
+        {
+            f32 sum = 0.0f;
+            for (int k = 0; k < 3; ++k)
+            {
+                sum += M3(a, r, k) * M3(b, k, c);
+            }
+            M3(R, r, c) = sum;
+        }
+    }
 
-m3  m3_from_euler_xyz(f32 pitch, f32 yaw, f32 roll);
+    return R;
+}
 
-m4  m4_identity(void);
+m3  m3_rotation_x(f32 a)
+{
+    m3  R = m3_identity();
+    f32 c = cosf(a);
+    f32 s = sinf(a);
+
+    M3(R, 1, 1) =  c;
+    M3(R, 1, 2) = -s;
+    M3(R, 2, 1) =  s;
+    M3(R, 2, 2) =  c;
+
+    return R;
+}
+
+m3  m3_rotation_y(f32 a)
+{
+    m3  R = m3_identity();
+    f32 c = cosf(a);
+    f32 s = sinf(a);
+
+    M3(R, 0, 0) =  c;
+    M3(R, 0, 2) =  s;
+    M3(R, 2, 0) = -s;
+    M3(R, 2, 2) =  c;
+
+    return R;
+}
+m3  m3_rotation_z(f32 a)
+{
+    m3  R = m3_identity();
+    f32 c = cosf(a);
+    f32 s = sinf(a);
+
+    M3(R, 0, 0) =  c;
+    M3(R, 0, 1) = -s;
+    M3(R, 1, 0) =  s;
+    M3(R, 1, 1) =  c;
+
+    return R;
+}
+
+m3  m3_from_euler_xyz(f32 pitch, f32 yaw, f32 roll)
+{
+    m3 Rx = m3_rotation_x(pitch);
+    m3 Ry = m3_rotation_y(yaw);
+    m3 Rz = m3_rotation_z(roll);
+
+    m3 R  = m3_mul(Rz, m3_mul(Rx, Ry));
+    return R;
+}
 
 m4 m4_identity(void)
 {

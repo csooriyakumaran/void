@@ -168,19 +168,27 @@ static void app_update(App *app)
         RenderMode_Wireframe
     );
 
-    m4 tmp_transform = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        2.0f, 2.0f, 2.0f, 1.0f,
-    };
+    v3 position = { .x=2.0f, .y=0.0f, .z=0.0f };
+    v3 scale    = { .x=2.0f, .y=2.0f, .z=2.0f };
+
+    f32 yaw_deg   = 45.0f;
+    f32 pitch_deg = 0.0f;
+    f32 roll_deg  = 45.0f;
+
+    f32 yaw = deg_to_rad(yaw_deg);
+    f32 pitch = deg_to_rad(pitch_deg);
+    f32 roll = deg_to_rad(roll_deg);
+
+    m3 R = m3_from_euler_xyz(pitch, yaw, roll);
+
+    m4 world = make_transform(position, R, scale);
 
     render_frame_push_mesh(
         &app->frame,
         app->test_mesh,
-        tmp_transform,
+        world,
         (v3){.r=1.0f, .g=0.0f, .b=1.0f},
-        RenderMode_Wireframe
+        RenderMode_Shaded
     );
 
 }
